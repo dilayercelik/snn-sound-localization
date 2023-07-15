@@ -18,6 +18,7 @@ Starting point:
 * How do the results depend on the neuron model and available dynamics? For example, does adaptation matter and in which conditions?
   - _Alberto_: I'm interested into looking at this (neuron and synapse model, plasticity).
   - _Danish_: I'm also interested in looking at this from the perspective of synaptic plasticity and auditory spatial working memory models. 
+  - _Dilay_: I'm interested in using/adapting the filter-and-fire neuron model (recently proposed by Beniaguev et al., 2022) in the SNN. 
 
 
 ## Technical challenges
@@ -47,3 +48,5 @@ Starting point:
   - _Danish_:  Very interesting question that I would like to explore.
 * Level of biological realism and impact on performace - Dale law.
   - _Jose_: Looking into this
+* Distribution of inhibitory and excitatory neurons using Dale's law
+  - _Sara_: First exploratory and interesting results, warrant further investigation

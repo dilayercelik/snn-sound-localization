@@ -57,8 +57,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/headphone-logo.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sound localisation with excitatory-only inputs surrogate gradient descent" href="Excitatory-only-localisation.html" />
-    <link rel="prev" title="Improving Performance: Optimizing the membrane time constant" href="Optimizing-Membrane-Time-Constant.html" />
+    <link rel="next" title="Analysing Dale’s law and distribution of excitatory and inhibitory neurons" href="IE-neuron-distribution.html" />
+    <link rel="prev" title="Robustness to Noise and Dropout" href="Noise_robustness.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -136,13 +136,43 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="SNN_sound_W1W2_threshold_plot.html">
-   Modified from starting Notebook
+  <a class="reference internal" href="Solving_problem_with_delay_learning.html">
+   Vanilla sound localization problem with a single delay layer (non-spiking)
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="Optimizing-Membrane-Time-Constant.html">
    Improving Performance: Optimizing the membrane time constant
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="SNN_sound_W1W2_threshold_plot.html">
+   Modified from starting Notebook
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Quick_Start.html">
+   Quick Start Notebook
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Learning_delays_major_edit2.html">
+   Learning delays
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Noise_robustness.html">
+   Robustness to Noise and Dropout
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="IE-neuron-distribution.html">
+   Analysing Dale’s law and distribution of excitatory and inhibitory neurons
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Filter-and-Fire_Neuron_Model_SNN.html">
+   Filter-and-Fire Neuron Model
   </a>
  </li>
  <li class="toctree-l1">
@@ -153,6 +183,11 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1">
   <a class="reference internal" href="Dynamic_threshold.html">
    Dynamic threshold
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Dales_Law_Follow_Up.html">
+   Analysing Dale’s law and distribution of excitatory and inhibitory neurons
   </a>
  </li>
  <li class="toctree-l1">
@@ -382,12 +417,12 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">duration_steps</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">anf_per_ear</span><span class="p">))</span>
     <span class="c1"># for each ear, we have anf_per_ear different phase delays from to pi/2 so</span>
     <span class="c1"># that the differences between the two ears can cover the full range from -pi/2 to pi/2</span>
-    <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">trainable_delays</span> <span class="ow">or</span> <span class="n">no_phase_delays</span><span class="p">:</span>
         <span class="n">phase_delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">anf_per_ear</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">phase_delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">anf_per_ear</span><span class="p">)</span>
-    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
     <span class="c1"># now we set up these theta to implement that. Some numpy vectorisation logic here which looks a little weird,</span>
     <span class="c1"># but implements the idea in the text above.</span>
     <span class="n">theta</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">anf_per_ear</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">+</span><span class="n">phase_delays</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
@@ -413,7 +448,7 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title Delay layer</span>
 <span class="k">class</span> <span class="nc">DelayLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Custom Delay Layer &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Custom Delay Layer &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_delay</span><span class="o">=</span><span class="mi">50</span><span class="o">*</span><span class="n">ms</span><span class="p">,</span> <span class="n">trainable_delays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_ear</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
                  <span class="n">constant_delays</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">constant_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lr_delay</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -590,21 +625,21 @@ const thebe_selector_output = ".output, .cell_output"
 
 <span class="c1"># Run the simulation</span>
 <span class="k">def</span> <span class="nf">snn</span><span class="p">(</span><span class="n">input_spikes</span><span class="p">,</span> <span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="n">ms</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">trainable_delays</span><span class="p">:</span>
         <span class="c1"># input_spikes = apply_delays(input_spikes, delays)</span>
         <span class="n">input_spikes</span> <span class="o">=</span> <span class="n">delay_layer</span><span class="p">(</span><span class="n">input_spikes</span><span class="p">)</span>
         <span class="n">duration_in</span> <span class="o">=</span> <span class="n">delay_layer</span><span class="o">.</span><span class="n">effective_duration</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">duration_in</span> <span class="o">=</span> <span class="n">duration_steps</span>
-    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
     <span class="c1"># First layer: input to hidden</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">s_rec</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;abc,cd-&gt;abd&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">input_spikes</span><span class="p">,</span> <span class="n">W1</span><span class="p">))</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">dt</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span>
-    <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">duration_in</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">new_v</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha</span><span class="o">*</span><span class="n">v</span> <span class="o">+</span> <span class="n">h</span><span class="p">[:,</span> <span class="n">t</span><span class="p">,</span> <span class="p">:])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">s</span><span class="p">)</span> <span class="c1"># multiply by 0 after a spike</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">spike_fn</span><span class="p">(</span><span class="n">v</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># threshold of 1</span>
@@ -617,7 +652,7 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">v_rec</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;abc,cd-&gt;abd&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">s_rec</span><span class="p">,</span> <span class="n">W2</span><span class="p">))</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">dt</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span>
-    <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">duration_in</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">v</span> <span class="o">+</span> <span class="n">h</span><span class="p">[:,</span> <span class="n">t</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">v_rec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -656,16 +691,16 @@ const thebe_selector_output = ".output, .cell_output"
     <span class="n">local_loss</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">x_local</span><span class="p">,</span> <span class="n">y_local</span> <span class="ow">in</span> <span class="n">data_generator</span><span class="p">(</span><span class="n">discretise</span><span class="p">(</span><span class="n">ipds</span><span class="p">),</span> <span class="n">spikes</span><span class="p">):</span>
         <span class="c1"># Run network</span>
-        <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
         <span class="c1"># Apply the delays only to the input spikes</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">snn</span><span class="p">(</span><span class="n">x_local</span><span class="p">,</span> <span class="n">W1</span><span class="p">,</span> <span class="n">W2</span><span class="p">)</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="c1"># Compute cross entropy loss</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mean across time dimension</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">log_softmax_fn</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">y_local</span><span class="p">)</span>
         <span class="n">local_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
         <span class="c1"># Update gradients</span>
-        <span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delay related update&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">trainable_delays</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
             <span class="n">optimizer_delay</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
@@ -676,7 +711,7 @@ const thebe_selector_output = ".output, .cell_output"
             <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
             <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
     <span class="n">loss_hist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">local_loss</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch </span><span class="si">%i</span><span class="s2">: loss=</span><span class="si">%.5f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">local_loss</span><span class="p">)))</span>
@@ -854,17 +889,17 @@ Delays after:   tensor([49.0, 49.0, 49.0, 49.0,  0.0, 49.0, 49.0,  0.0, 49.0, 49
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="Optimizing-Membrane-Time-Constant.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="Noise_robustness.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Improving Performance: Optimizing the membrane time constant</p>
+            <p class="prev-next-title">Robustness to Noise and Dropout</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="Excitatory-only-localisation.html" title="next page">
+    <a class='right-next' id="next-link" href="IE-neuron-distribution.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Sound localisation with excitatory-only inputs surrogate gradient descent</p>
+        <p class="prev-next-title">Analysing Dale’s law and distribution of excitatory and inhibitory neurons</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
